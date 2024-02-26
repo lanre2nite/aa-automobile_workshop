@@ -14,6 +14,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs&libraries=places,directions"></script>
 <title>Homepage - AA-Automobile Workshop</title>
 <!--
 <meta name="description" content="AA Automobile Workshop">
@@ -123,71 +124,70 @@
     <header class="section-header">
       <h2 class="''section-ttitle">Login</h2>
     </header>
-    <script src="https://www.gstatic.com/fiebasejs/8.0/firebase.js"</script>
-    <script>
-    var config = {
-      apikey:
-      "AlzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs",
-        authDomain:
-        "boxwood-reach-415220.fiebaseapp.com",
-      };
-      firebase.initializeApp(config);
-    </script>
-    <frame attributes>
-    <Fieldset> 
-        <legend>  SignIn / SignUp</legend>
-        <label>First Name<input type="text" name= "username"></label>
-       <p><label>Other Names<input type="text" name= "other names"></label></p>
-       <p><label>Submit <input type="button" name ="Submit"></label></P>
-    </Fieldset>
-</frame>
-<!--style>
-    #map {
-      height: 500px;
-      width: 100%;
-    }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-</head>
-<body>
-  <div id="map"></div>
+   <div id="map"></div>
+  <div id="search-box"></div>
+  <div id="directions-panel"></div>
+  <button id="traffic-toggle">Traffic of my Location</button>
   <script>
-    // Replace 'YOUR_API_KEY' with your actual Google Maps API key
-    const apiKey = 'AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs';
+    // Replace YOUR_API_KEY with your actual API key
+    const YOUR_API_KEY = "AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs";
 
     function initMap() {
-      // Create a new map object
-      const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: { lat: 4.7519, lng: 7.0117 }, // Replace with your current coordinates if possible
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: { lat: 9.0579, lng: 7.4951 }
       });
 
-      // If geolocation is available, use it to get the user's current location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const currentCoords = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          map.setCenter(currentCoords);
-          // Add a marker to the user's current location
+      // Create search box
+      const searchBox = new google.maps.places.SearchBox(document.getElementById("search-box"));
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+        if (places.length > 0) {
+          const place = places[0];
+          map.setCenter(place.geometry.location);
           new google.maps.Marker({
-            position: currentCoords,
-            map: map,
-            title: 'You are here!',
+            position: place.geometry.location,
+            map: map
           });
-        });
-      } else {
-        // Handle the case where geolocation is not available
-        console.error('Geolocation is not supported by your browser.');
-      }
+        }
+      });
+
+      // Directions panel
+      const directionsPanel = document.getElementById("directions-panel");
+
+      // Directions service and renderer
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: directionsPanel
+      });
+
+      // Traffic layer
+      const trafficLayer = new google.maps.TrafficLayer();
+
+      // Toggle traffic button
+      const trafficButton = document.getElementById("traffic-toggle");
+      trafficButton.addEventListener("click", () => {
+        trafficLayer.setMap(trafficLayer.getMap() ? null : map);
+      });
+
+      // Example direction calculation
+      const origin = { lat: 9.0579, lng: 7.4951 };
+      const destination = { lat: 9.0579, lng: 7.4951 };
+
+      directionsService.route({
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, (response, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(response);
+        }
+      });
     }
 
-    initMap();
-  </script-->
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?
-  key=AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs=drawing,places&callback=initMap"></script>
+    window.addEventListener("load", initMap);
+  </script> 
   </div>
    <!-- Support section -->
       <section id="support" class="section">
