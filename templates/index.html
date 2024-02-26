@@ -14,6 +14,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs&libraries=places,directions"></script>
 <title>Homepage - AA-Automobile Workshop</title>
 <!--
 <meta name="description" content="AA Automobile Workshop">
@@ -45,7 +46,7 @@
               <a href="#login" class="nav-link">Login</a>
             </li>
             <li class="nav-item">
-              <a href="#support" class="nav-link">Support</a>
+              <a href="#blog" class="nav-link">Blog</a>
             </li>
                         <li class="nav-item">
               <a href="#about" class="nav-link">About Us</a>
@@ -66,7 +67,7 @@
                 <h2 class="section-title">AA Automobile Workshop</h2>
                         <h4>Automobile Diagnosis, Repair and Maintenance Made Easy and Available</h4>
                         <h4>Anywhere and Everywhere!</h4> 
-                        <img src="image1.jpg" alt="Techium logo" width="1000" height="200">
+                        <img src="image1.jpg" alt="Techium logo" width="1200" height="300">
                     </section>
           </div>
         </div>
@@ -123,65 +124,138 @@
     <header class="section-header">
       <h2 class="''section-ttitle">Login</h2>
     </header>
-    <frame attributes>
-    <Fieldset> 
-        <legend>  SignIn / SignUp</legend>
-        <label>First Name<input type="text" name= "username"></label>
-       <p><label>Other Names<input type="text" name= "other names"></label></p>
-       <p><label>Submit <input type="button" name ="Submit"></label></P>
-    </Fieldset>
-</frame>
-<style>
-    #map {
-      height: 500px;
-      width: 100%;
-    }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-</head>
-<body>
+
+<form action="/login" method="post">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" required><br><br>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
+  <button type="submit">Login</button><br><br>
+</form>
+  <!--
   <div id="map"></div>
+  <div id="search-box"></div>
+  <div id="directions-panel"></div>
+  <button id="traffic-toggle">Toggle Traffic</button>
   <script>
-    // Replace 'YOUR_API_KEY' with your actual Google Maps API key
-    const apiKey = 'AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs';
+    // Replace YOUR_API_KEY with your actual API key
+    const YOUR_API_KEY = "AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs";
 
     function initMap() {
-      // Create a new map object
-      const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: { lat: 4.7519, lng: 7.0117 }, // Replace with your current coordinates if possible
+      // Create the map object
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8
       });
 
-      // If geolocation is available, use it to get the user's current location
+      // Check if geolocation is available
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-          const currentCoords = {
+          const userLocation = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lng: position.coords.longitude
           };
-          map.setCenter(currentCoords);
-          // Add a marker to the user's current location
-          new google.maps.Marker({
-            position: currentCoords,
-            map: map,
-            title: 'You are here!',
+
+          // Center the map on the user's location
+          map.setCenter(userLocation);
+
+          // Create a marker at the user's location
+          const marker = new google.maps.Marker({
+            position: userLocation,
+            map: map
           });
+
+          // Add an info window with user's coordinates
+          const infowindow = new google.maps.InfoWindow({
+            content: `Latitude: ${userLocation.lat}, Longitude: ${userLocation.lng}`
+          });
+          marker.addListener("click", () => {
+            infowindow.open(map, marker);
+          });
+        }, (error) => {
+          // Handle error if geolocation fails
+          console.error("Error getting user location:", error);
         });
       } else {
-        // Handle the case where geolocation is not available
-        console.error('Geolocation is not supported by your browser.');
+        console.error("Geolocation is not supported by this browser.");
       }
+
+      // ... remaining code for search box, directions, traffic layer, etc. (unchanged)
     }
 
-    initMap();
+    window.addEventListener("load", initMap);
   </script>
+  -->
+   <div id="map"></div>
+  <div id="search-box"></div>
+  <div id="directions-panel"></div>
+  <button id="traffic-toggle">Traffic of my Location</button>
+  <script>
+    // Replace YOUR_API_KEY with your actual API key
+    const YOUR_API_KEY = "AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs";
+
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: { lat: 9.0579, lng: 7.4951 }
+      });
+
+      // Create search box
+      const searchBox = new google.maps.places.SearchBox(document.getElementById("search-box"));
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+        if (places.length > 0) {
+          const place = places[0];
+          map.setCenter(place.geometry.location);
+          new google.maps.Marker({
+            position: place.geometry.location,
+            map: map
+          });
+        }
+      });
+
+      // Directions panel
+      const directionsPanel = document.getElementById("directions-panel");
+
+      // Directions service and renderer
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        panel: directionsPanel
+      });
+
+      // Traffic layer
+      const trafficLayer = new google.maps.TrafficLayer();
+
+      // Toggle traffic button
+      const trafficButton = document.getElementById("traffic-toggle");
+      trafficButton.addEventListener("click", () => {
+        trafficLayer.setMap(trafficLayer.getMap() ? null : map);
+      });
+
+      // Example direction calculation
+      const origin = { lat: 9.0579, lng: 7.4951 };
+      const destination = { lat: 9.0579, lng: 7.4951 };
+
+      directionsService.route({
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, (response, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(response);
+        }
+      });
+    }
+
+    window.addEventListener("load", initMap);
+  </script> 
   </div>
-   <!-- Support section -->
-      <section id="support" class="section">
+   <!-- Blog section -->
+      <section id="blog" class="section">
         <div class="container">
           <header class="section-header">
-            <h2 class="section-title">Support</h2>
-            <p class="section-tagline">Everything you need</p>
+            <h2 class="section-title">Blog</h2>
+            <p class="section-tagline">Follow Us for Exciting Updates about the Automobile Industry</p>
           </header>
           <div class="section-body">
             <div class="row">
@@ -189,12 +263,7 @@
                 <img src="diagnostic2.jpg" alt="" width="460" height="460">
               </div>
               <div class="col-1-2">
-                <h3>Who are we</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, omnis expedita! Eum, praesentium cumque accusantium rem, sit quaerat est nisi ratione, deserunt ducimus quidem iste dicta quibusdam atque maxime cum!</p>
-                <h3>Our culture</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, omnis expedita! Eum, praesentium cumque accusantium rem, sit quaerat est nisi ratione, deserunt ducimus quidem iste dicta quibusdam atque maxime cum!</p>
-                <h3>How we work</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum, omnis expedita! Eum, praesentium cumque accusantium rem, sit quaerat est nisi ratione, deserunt ducimus quidem iste dicta quibusdam atque maxime cum!</p>
+                <P> Welcome!, this my first blog</P>
               </div>
             </div>
           </div>
@@ -205,11 +274,38 @@
             <h2 class="section-title">About US</h2>
             <p class="section-tagline">At Your Service Always</p>
           </header>
+        <h3>Who are we</h3>
+                <p>AA Integrated Limited is a Nigerian Indigenous Company established in mid 2020s and registered with the Corporate Affairs on the 13th October 22020 to provide optimized solutions for individuals, public and private sector while catering for all there engineering needs. 
+                We specialize in Computer, Mechanical & Electrical/Electronic Systems Installations, Sales of Accessories/ Devices/Equipment, Maintenance & Repairs.
+Engineering is a profession concerned primarily with the application of a certain body of knowledge, set of skills and point of view in the creation of devices, systems, processes and structures used to transform resources to forms which satisfy the needs of the society.
+We are team of versatile engineers with many years of technical and administrative experience and we take pride in satisfying our client’s needs by providing the optimal services using the best materials and devices.
+</p>
+                
+                <h4>VISION</h4>
+<p>OUR Vision is to be pinnacle of the Nigerian engineering firm that would be capable of providing the best efficient services and be an exemplary model to other engineering firms.</p>
+<h4>MISSION</h4>
+<p>OUR Mission is to give our clients the opportunity to acquire the optimal services to enhance their daily life and business wellness from well trained, experience and professional experts.</p>
+                <h3>How we work</h3>
+                <p></p>
         <h5>The company’s registered office address is No 32 Near Fifteen (15) Shop Shopping Complex, Along Federal High Court, Polo, Maiduguri, Borno state, Nigeria.
           <h5>Operating Address is FHA Lugbe, FCT Abuja</h5>
 <h5>Contact Phone: +2348120207258</h5> 
 <Email>Email Address: aaintegrated@outlook.com</Email>
 <h5>Website: aaintegrated.business.site</h5>
+<h4>Contact Us</h4>
+<form action="your_script.php" method="post">
+  <h2>Contact Form</h2>
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name" placeholder="Your Name">
+  <br><br>
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" placeholder="Your Email">
+  <br><br>
+  <label for="message">Message:</label>
+  <textarea id="message" name="message" cols="30" rows="10" placeholder="Write your message here"></textarea>
+  <br>
+  <button type="submit">Send Message</button>
+</form>
       </div>
     </section>
 </body>
@@ -217,7 +313,7 @@
 
     <!--<footer class="footer" data-section-theme="dark"-->
       <div  class="container">
-<h5>AA INTEGRATED LIMITED RC 1721493 | Copyright &copy; 2023</h5>
+<h5>AA INTEGRATED LIMITED RC 1721493 | Copyright &copy; 2024</h5>
       </div>
     </footer>
 </html>

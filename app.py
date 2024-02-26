@@ -37,6 +37,9 @@ class SignUp(db.Model):
     def __repr__(self):
         return '<SignUp %r>' % self.username
 """ 
+
+
+
         
 @app.route('/')
 def index():
@@ -112,11 +115,36 @@ def signup():
         print (e)
         
         return "There was an Error SignUp", 500 
+
 """
 
+def contact():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        message = request.form["message"]
+
+        # Implement validation and sanitization logic here
+        # to ensure data integrity and prevent security vulnerabilities
+
+        # Replace these placeholder values with your actual email configuration
+        sender_email = "aaintergrated@gmail.com"
+        receiver_email = "aaintegrated@outlook.com"
+        subject = f"Contact Form Submission from {name}"
+        body = f"{name} ({email}) sent you a message:\n\n{message}"
+
+        # Use a secure email sending library like smtplib with proper authentication
+        # to send the email (code not provided due to security concerns)
+
+        return "Thank you for your message!"
+    else:
+        # Display the contact form
+        return
+
 if __name__ == "__main__":
-   """ db.create_all()
-    app.run(debug=True)
-    """
+   """ db.create_all() 
+   """
+   app.run(debug=True)
     
-app.run(host='localhost', port=5000)
+    
+# app.run(host='localhost', port=5000)
