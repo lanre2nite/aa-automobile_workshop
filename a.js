@@ -1,20 +1,20 @@
 const express = require('express');
-const morgan = require('morgan'); //a package using middleware function for more info on req and res processes
-const mongoose = require('mongoose'); //a module or package for mongodb database
-const multer = require('multer'); //a package that handles info & file storage
+//const morgan = require('morgan'); //a package using middleware function for more info on req and res processes
+//const mongoose = require('mongoose'); //a module or package for mongodb database
+//const multer = require('multer'); //a package that handles info & file storage
 const upload = multer({ dest: './models/uploads/' }); // specifying path for multer storage
 const path = require('path')
 const app = express();
 
 //connecting to mongodb
-const dbURI = "mongodb+srv://olabagy:Wca123@wcahub.qfpl5gm.mongodb.net/?retryWrites=true&w=majority";
-app.set('view engine', 'ejs'); // using view engines
+//const dbURI = "mongodb+srv://olabagy:Wca123@wcahub.qfpl5gm.mongodb.net/?retryWrites=true&w=majority";
+//app.set('view engine', 'ejs'); // using view engines
 //app.set('views', 'templates'); to specify a different folder for the ejs views
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+/*mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => console.log('connected to wcahub databases' , app.listen(3000)))
   .catch(err => console.log(err));
-
+*/
 
 // Middleware for static files
 app.use('/models/uploads', express.static('models/uploads'));
