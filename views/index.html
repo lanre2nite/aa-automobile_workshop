@@ -132,59 +132,6 @@
   <input type="password" id="password" name="password" required>
   <button type="submit">Login</button><br><br>
 </form>
-  <!--
-  <div id="map"></div>
-  <div id="search-box"></div>
-  <div id="directions-panel"></div>
-  <button id="traffic-toggle">Toggle Traffic</button>
-  <script>
-    // Replace YOUR_API_KEY with your actual API key
-    const YOUR_API_KEY = "AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs";
-
-    function initMap() {
-      // Create the map object
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 8
-      });
-
-      // Check if geolocation is available
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-
-          // Center the map on the user's location
-          map.setCenter(userLocation);
-
-          // Create a marker at the user's location
-          const marker = new google.maps.Marker({
-            position: userLocation,
-            map: map
-          });
-
-          // Add an info window with user's coordinates
-          const infowindow = new google.maps.InfoWindow({
-            content: `Latitude: ${userLocation.lat}, Longitude: ${userLocation.lng}`
-          });
-          marker.addListener("click", () => {
-            infowindow.open(map, marker);
-          });
-        }, (error) => {
-          // Handle error if geolocation fails
-          console.error("Error getting user location:", error);
-        });
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
-
-      // ... remaining code for search box, directions, traffic layer, etc. (unchanged)
-    }
-
-    window.addEventListener("load", initMap);
-  </script>
-  -->
    <div id="map"></div>
   <div id="search-box"></div>
   <div id="directions-panel"></div>

@@ -16,6 +16,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs&libraries=places,directions"></script>
 <title>Homepage - AA-Automobile Workshop</title>
+<!--
+<meta name="description" content="AA Automobile Workshop">
+<link rel="icon" type="image/x-icon" href="./favicon.ico">
+<link rel='icon" type="image/png" href="./favicon.png">
+-->
         <link rel="stylesheet"
     type="text/css"
     href= "aaaw-style.css">
@@ -127,6 +132,59 @@
   <input type="password" id="password" name="password" required>
   <button type="submit">Login</button><br><br>
 </form>
+  <!--
+  <div id="map"></div>
+  <div id="search-box"></div>
+  <div id="directions-panel"></div>
+  <button id="traffic-toggle">Toggle Traffic</button>
+  <script>
+    // Replace YOUR_API_KEY with your actual API key
+    const YOUR_API_KEY = "AIzaSyAseFWMq_L_0MLee8GLB3y2KcPJLTuifDs";
+
+    function initMap() {
+      // Create the map object
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8
+      });
+
+      // Check if geolocation is available
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          // Center the map on the user's location
+          map.setCenter(userLocation);
+
+          // Create a marker at the user's location
+          const marker = new google.maps.Marker({
+            position: userLocation,
+            map: map
+          });
+
+          // Add an info window with user's coordinates
+          const infowindow = new google.maps.InfoWindow({
+            content: `Latitude: ${userLocation.lat}, Longitude: ${userLocation.lng}`
+          });
+          marker.addListener("click", () => {
+            infowindow.open(map, marker);
+          });
+        }, (error) => {
+          // Handle error if geolocation fails
+          console.error("Error getting user location:", error);
+        });
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+
+      // ... remaining code for search box, directions, traffic layer, etc. (unchanged)
+    }
+
+    window.addEventListener("load", initMap);
+  </script>
+  -->
    <div id="map"></div>
   <div id="search-box"></div>
   <div id="directions-panel"></div>
@@ -262,8 +320,3 @@ We are team of versatile engineers with many years of technical and administrati
       </div>
     </footer>
 </html>
-
-###This is a README.md file
-### ALX SE PROGRAM
-#TOPIC: PROJECT PORTFOLIO
-##AA AUTOMOBILE WORKSHOP
